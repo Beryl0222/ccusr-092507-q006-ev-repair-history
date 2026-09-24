@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "新能源维修授权履历领域事件",
+  "type": "object",
+  "required": [
+    "event_id",
+    "event_type",
+    "aggregate_type",
+    "aggregate_id",
+    "occurred_at",
+    "version",
+    "payload"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "CASE_OPENED",
+        "PROCEDURE_AUTHORIZED",
+        "COMPONENT_INSTALLED",
+        "NOTICE_APPLIED",
+        "WARRANTY_ISSUED"
+      ]
+    },
+    "aggregate_type": {
+      "type": "string",
+      "enum": [
+        "vehicle_configuration",
+        "repair_case",
+        "component_unit",
+        "technical_notice"
+      ]
+    },
+    "aggregate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "payload_required_by_event": {
+    "PROCEDURE_AUTHORIZED": [
+      "procedure_version",
+      "technician_id"
+    ],
+    "COMPONENT_INSTALLED": [
+      "component_serial",
+      "vehicle_id"
+    ],
+    "NOTICE_APPLIED": [
+      "notice_version",
+      "affected_scope"
+    ]
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,9 @@
+{
+  "event_id": "092507-006-sample-001",
+  "event_type": "CASE_OPENED",
+  "aggregate_type": "vehicle_configuration",
+  "aggregate_id": "ev_repair_history-001",
+  "occurred_at": "2026-09-24T12:00:00+08:00",
+  "version": 1,
+  "payload": {}
+}
