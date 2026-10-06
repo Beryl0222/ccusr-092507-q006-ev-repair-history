@@ -1,9 +1,18 @@
 {
-  "event_id": "092507-006-sample-001",
-  "event_type": "CASE_OPENED",
-  "aggregate_type": "vehicle_configuration",
-  "aggregate_id": "ev_repair_history-001",
-  "occurred_at": "2026-09-24T12:00:00+08:00",
-  "version": 1,
-  "payload": {}
+  "event_id": "092507-006-sample-hazard-001",
+  "event_type": "HAZARD_STEP_SIGNED_OFF",
+  "aggregate_type": "repair_case",
+  "aggregate_id": "case-2026-092507-006",
+  "occurred_at": "2026-09-25T10:24:00+08:00",
+  "version": 3,
+  "payload": {
+    "case_id": "case-2026-092507-006",
+    "step_code": "HV-PACK-DISASSEMBLY-02",
+    "procedure_code": "EV-BATT-REPACK",
+    "procedure_version": 7,
+    "operator_id": "tech-100321",
+    "verifier_id": "tech-100287",
+    "qualification_code": "HV-BATTERY-L2",
+    "signed_at": "2026-09-25T10:23:00+08:00"
+  }
 }

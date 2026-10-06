@@ -21,9 +21,27 @@
       "enum": [
         "CASE_OPENED",
         "PROCEDURE_AUTHORIZED",
+        "PROCEDURE_FROZEN_FOR_CASE",
+        "HAZARD_STEP_SIGNED_OFF",
+        "CONFIG_MISMATCH_DETECTED",
+        "AFFECTED_STEPS_SUSPENDED",
+        "CASE_REASSESSED",
+        "DIAGNOSIS_RECORDED",
+        "DISASSEMBLY_RECORDED",
+        "SOFTWARE_FLASHED",
         "COMPONENT_INSTALLED",
+        "REPLACEMENT_PART_RESERVED",
+        "REPLACEMENT_PART_RELEASED",
+        "NOTICE_ISSUED",
         "NOTICE_APPLIED",
-        "WARRANTY_ISSUED"
+        "NOTICE_SUPERSEDED",
+        "SERVICE_OBLIGATION_RAISED",
+        "WARRANTY_ISSUED",
+        "REPAIR_CERTIFICATE_ISSUED",
+        "RECEIPT_ACKNOWLEDGED",
+        "CHARGE_REVERSED",
+        "DISPUTE_LOCKED",
+        "CASE_RESUMED_AFTER_RESTART"
       ]
     },
     "aggregate_type": {
@@ -32,7 +50,16 @@
         "vehicle_configuration",
         "repair_case",
         "component_unit",
-        "technical_notice"
+        "technical_notice",
+        "service_organization",
+        "technician",
+        "replacement_part",
+        "service_obligation",
+        "diagnostic_evidence",
+        "charge_receipt",
+        "repair_certificate",
+        "insurance_claim",
+        "warranty_coverage"
       ]
     },
     "aggregate_id": {
@@ -52,17 +79,277 @@
     }
   },
   "payload_required_by_event": {
+    "CASE_OPENED": [
+      "vehicle_id",
+      "organization_id",
+      "valid_until"
+    ],
     "PROCEDURE_AUTHORIZED": [
       "procedure_version",
       "technician_id"
     ],
+    "PROCEDURE_FROZEN_FOR_CASE": [
+      "procedure_code",
+      "procedure_version",
+      "notice_version_applied",
+      "vehicle_config_fingerprint",
+      "frozen_at"
+    ],
+    "HAZARD_STEP_SIGNED_OFF": [
+      "case_id",
+      "step_code",
+      "procedure_code",
+      "procedure_version",
+      "operator_id",
+      "verifier_id",
+      "qualification_code",
+      "signed_at"
+    ],
+    "CONFIG_MISMATCH_DETECTED": [
+      "case_id",
+      "step_code",
+      "expected_fingerprint",
+      "actual_fingerprint",
+      "detected_at"
+    ],
+    "AFFECTED_STEPS_SUSPENDED": [
+      "case_id",
+      "step_codes",
+      "reason",
+      "suspended_at"
+    ],
+    "CASE_REASSESSED": [
+      "case_id",
+      "reassessed_procedure_version",
+      "disassembly_facts_retained",
+      "reassessed_at"
+    ],
+    "DIAGNOSIS_RECORDED": [
+      "case_id",
+      "vehicle_id",
+      "fault_conclusion_code",
+      "evidence_refs",
+      "diagnosed_at"
+    ],
+    "DISASSEMBLY_RECORDED": [
+      "case_id",
+      "step_code",
+      "component_serial",
+      "vehicle_id",
+      "disassembled_at"
+    ],
+    "SOFTWARE_FLASHED": [
+      "case_id",
+      "vehicle_id",
+      "ecu_serial",
+      "software_version_before",
+      "software_version_after",
+      "flashed_at"
+    ],
     "COMPONENT_INSTALLED": [
       "component_serial",
-      "vehicle_id"
+      "vehicle_id",
+      "case_id",
+      "part_reservation_id",
+      "installed_at"
+    ],
+    "REPLACEMENT_PART_RESERVED": [
+      "reservation_id",
+      "part_serial",
+      "case_id",
+      "reserve_token",
+      "reserved_at",
+      "valid_until"
+    ],
+    "REPLACEMENT_PART_RELEASED": [
+      "reservation_id",
+      "part_serial",
+      "case_id",
+      "released_at"
+    ],
+    "NOTICE_ISSUED": [
+      "notice_code",
+      "notice_version",
+      "affected_scope",
+      "effective_from",
+      "supersedes_notice_version"
     ],
     "NOTICE_APPLIED": [
       "notice_version",
-      "affected_scope"
+      "affected_scope",
+      "case_id",
+      "applied_at"
+    ],
+    "NOTICE_SUPERSEDED": [
+      "notice_code",
+      "previous_version",
+      "latest_version",
+      "superseded_at"
+    ],
+    "SERVICE_OBLIGATION_RAISED": [
+      "obligation_id",
+      "notice_version",
+      "vehicle_cohort",
+      "obligation_kind",
+      "obligation_status",
+      "raised_at",
+      "valid_until"
+    ],
+    "WARRANTY_ISSUED": [
+      "case_id",
+      "vehicle_id",
+      "component_serial",
+      "coverage_scope",
+      "valid_from",
+      "valid_until"
+    ],
+    "REPAIR_CERTIFICATE_ISSUED": [
+      "case_id",
+      "vehicle_id",
+      "certificate_ref",
+      "redacted",
+      "issued_at"
+    ],
+    "RECEIPT_ACKNOWLEDGED": [
+      "receipt_id",
+      "receipt_kind",
+      "case_id",
+      "vehicle_id",
+      "component_serial",
+      "amount",
+      "currency",
+      "idempotency_key",
+      "duplicate",
+      "acknowledged_at"
+    ],
+    "CHARGE_REVERSED": [
+      "receipt_id",
+      "case_id",
+      "reversal_ref",
+      "reversed_at"
+    ],
+    "DISPUTE_LOCKED": [
+      "idempotency_key",
+      "case_ids",
+      "part_serials",
+      "locked_at"
+    ],
+    "CASE_RESUMED_AFTER_RESTART": [
+      "case_id",
+      "resumed_at",
+      "redelivery_skipped_refs",
+      "pending_recall_refs"
+    ]
+  },
+  "payload_enums_by_event": {
+    "RECEIPT_ACKNOWLEDGED": {
+      "receipt_kind": [
+        "diagnosis_receipt",
+        "settlement_receipt"
+      ],
+      "duplicate": [
+        true,
+        false
+      ]
+    },
+    "SERVICE_OBLIGATION_RAISED": {
+      "vehicle_cohort": [
+        "in_repair",
+        "delivered",
+        "under_warranty"
+      ],
+      "obligation_kind": [
+        "recall_todo",
+        "rework",
+        "notify_owner",
+        "warranty_entitlement"
+      ],
+      "obligation_status": [
+        "due",
+        "fulfilled",
+        "waived_grandfathered"
+      ]
+    },
+    "REPAIR_CERTIFICATE_ISSUED": {
+      "redacted": [
+        true,
+        false
+      ]
+    },
+    "CASE_REASSESSED": {
+      "disassembly_facts_retained": [
+        true
+      ]
+    }
+  },
+  "payload_datetime_fields_by_event": {
+    "*": [
+      "valid_until",
+      "valid_from",
+      "effective_from"
+    ],
+    "PROCEDURE_FROZEN_FOR_CASE": [
+      "frozen_at"
+    ],
+    "HAZARD_STEP_SIGNED_OFF": [
+      "signed_at"
+    ],
+    "CONFIG_MISMATCH_DETECTED": [
+      "detected_at"
+    ],
+    "AFFECTED_STEPS_SUSPENDED": [
+      "suspended_at"
+    ],
+    "CASE_REASSESSED": [
+      "reassessed_at"
+    ],
+    "DIAGNOSIS_RECORDED": [
+      "diagnosed_at"
+    ],
+    "DISASSEMBLY_RECORDED": [
+      "disassembled_at"
+    ],
+    "SOFTWARE_FLASHED": [
+      "flashed_at"
+    ],
+    "COMPONENT_INSTALLED": [
+      "installed_at"
+    ],
+    "REPLACEMENT_PART_RESERVED": [
+      "reserved_at",
+      "valid_until"
+    ],
+    "REPLACEMENT_PART_RELEASED": [
+      "released_at"
+    ],
+    "NOTICE_APPLIED": [
+      "applied_at"
+    ],
+    "NOTICE_SUPERSEDED": [
+      "superseded_at"
+    ],
+    "SERVICE_OBLIGATION_RAISED": [
+      "raised_at",
+      "valid_until"
+    ],
+    "WARRANTY_ISSUED": [
+      "valid_from",
+      "valid_until"
+    ],
+    "REPAIR_CERTIFICATE_ISSUED": [
+      "issued_at"
+    ],
+    "RECEIPT_ACKNOWLEDGED": [
+      "acknowledged_at"
+    ],
+    "CHARGE_REVERSED": [
+      "reversed_at"
+    ],
+    "DISPUTE_LOCKED": [
+      "locked_at"
+    ],
+    "CASE_RESUMED_AFTER_RESTART": [
+      "resumed_at"
     ]
   },
   "additionalProperties": false

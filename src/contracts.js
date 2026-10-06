@@ -1,5 +1,3 @@
-import { parseArgs } from "node:util";
-
 function hasExplicitTimezone(value) {
   return typeof value === "string" && (/Z$/.test(value) || /[+-]\d{2}:\d{2}$/.test(value)) && !Number.isNaN(Date.parse(value));
 }
@@ -35,6 +33,21 @@ export function validateEvent(payload, schema) {
   } else if (typeof payload.event_type === "string" && eventPayload && typeof eventPayload === "object") {
     for (const field of schema.payload_required_by_event?.[payload.event_type] ?? []) {
       if (!(field in eventPayload)) issues.push({ field: `payload.${field}`, code: "required", message: "事件载荷缺少必填字段" });
+    }
+    const enumRules = schema.payload_enums_by_event?.[payload.event_type] ?? {};
+    for (const [field, allowed] of Object.entries(enumRules)) {
+      if (field in eventPayload && !allowed.includes(eventPayload[field])) {
+        issues.push({ field: `payload.${field}`, code: "unsupported_value", message: "载荷字段值未在契约中登记" });
+      }
+    }
+    const datetimeFields = [
+      ...(schema.payload_datetime_fields_by_event?.["*"] ?? []),
+      ...(schema.payload_datetime_fields_by_event?.[payload.event_type] ?? []),
+    ];
+    for (const field of datetimeFields) {
+      if (field in eventPayload && !hasExplicitTimezone(eventPayload[field])) {
+        issues.push({ field: `payload.${field}`, code: "timezone_required", message: "载荷时间必须包含时区" });
+      }
     }
   }
   return issues.sort((left, right) => left.field.localeCompare(right.field) || left.code.localeCompare(right.code));
