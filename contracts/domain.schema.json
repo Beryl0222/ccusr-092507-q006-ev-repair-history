@@ -19,11 +19,25 @@
     "event_type": {
       "type": "string",
       "enum": [
+        "CONFIG_REGISTERED",
+        "TECHNICIAN_REGISTERED",
+        "COMPONENT_STOCKED",
         "CASE_OPENED",
         "PROCEDURE_AUTHORIZED",
+        "STEP_SIGNED_OFF",
+        "CONFIG_MISMATCH_DETECTED",
+        "COMPONENT_RESERVED",
         "COMPONENT_INSTALLED",
+        "NOTICE_PUBLISHED",
         "NOTICE_APPLIED",
-        "WARRANTY_ISSUED"
+        "OBLIGATION_RAISED",
+        "DIAGNOSTIC_RECORDED",
+        "SETTLEMENT_RECORDED",
+        "FEE_CORRECTED",
+        "DISPUTE_LOCKED",
+        "CASE_DELIVERED",
+        "WARRANTY_ISSUED",
+        "DISPATCH_RECORDED"
       ]
     },
     "aggregate_type": {
@@ -32,7 +46,8 @@
         "vehicle_configuration",
         "repair_case",
         "component_unit",
-        "technical_notice"
+        "technical_notice",
+        "technician"
       ]
     },
     "aggregate_id": {
@@ -52,17 +67,88 @@
     }
   },
   "payload_required_by_event": {
+    "CONFIG_REGISTERED": [
+      "vehicle_id",
+      "model",
+      "software_version"
+    ],
+    "TECHNICIAN_REGISTERED": [
+      "technician_id",
+      "shop_id",
+      "qualifications"
+    ],
+    "COMPONENT_STOCKED": [
+      "component_serial",
+      "part_number",
+      "source"
+    ],
     "PROCEDURE_AUTHORIZED": [
       "procedure_version",
       "technician_id"
+    ],
+    "STEP_SIGNED_OFF": [
+      "step_id",
+      "technician_ids"
+    ],
+    "CONFIG_MISMATCH_DETECTED": [
+      "step_id",
+      "expected",
+      "found"
+    ],
+    "COMPONENT_RESERVED": [
+      "component_serial",
+      "case_id"
     ],
     "COMPONENT_INSTALLED": [
       "component_serial",
       "vehicle_id"
     ],
+    "NOTICE_PUBLISHED": [
+      "notice_id",
+      "notice_version",
+      "affected_scope",
+      "effective_from"
+    ],
     "NOTICE_APPLIED": [
       "notice_version",
       "affected_scope"
+    ],
+    "OBLIGATION_RAISED": [
+      "obligation_id",
+      "obligation_type",
+      "vehicle_id",
+      "notice_id"
+    ],
+    "DIAGNOSTIC_RECORDED": [
+      "receipt_id",
+      "vehicle_id"
+    ],
+    "SETTLEMENT_RECORDED": [
+      "receipt_id",
+      "case_id",
+      "amount"
+    ],
+    "FEE_CORRECTED": [
+      "correction_id",
+      "original_receipt_id",
+      "amount_delta"
+    ],
+    "DISPUTE_LOCKED": [
+      "receipt_id",
+      "reason"
+    ],
+    "CASE_DELIVERED": [
+      "case_id",
+      "vehicle_id"
+    ],
+    "WARRANTY_ISSUED": [
+      "warranty_id",
+      "case_id",
+      "coverage_until"
+    ],
+    "DISPATCH_RECORDED": [
+      "obligation_id",
+      "channel"
     ]
   },
   "additionalProperties": false
